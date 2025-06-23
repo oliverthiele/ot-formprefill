@@ -20,11 +20,11 @@ Field mapping is fully configurable via FlexForm or `config.yaml` – no TypoScr
 
 ## Requirements
 
-| | |
-|---|---|
-| TYPO3 | **13.4 LTS** (13.4.14 +) |
-| PHP | 8.1 + |
-| Composer | 2.x |
+|          |                             |
+|----------|-----------------------------|
+| TYPO3    | **13.4 LTS** (13.4.14 +) |
+| PHP      | 8.1 +                    |
+| Composer | 2.x                         |
 
 ---
 
