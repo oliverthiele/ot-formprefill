@@ -1,0 +1,26 @@
+<T3DataStructure>
+    <sheets>
+        <sDEF>
+            <ROOT>
+                <sheetTitle>LLL:EXT:ot_formprefill/Resources/Private/Language/de.locallang_db.xlf:flexForms.sheetTitle</sheetTitle>
+                <el>
+                    <settings.formIdentifier>
+                        <label>LLL:EXT:ot_formprefill/Resources/Private/Language/de.locallang_db.xlf:flexForms.formIdentifier.label</label>
+                        <description>LLL:EXT:ot_formprefill/Resources/Private/Language/de.locallang_db.xlf:flexForms.formIdentifier.description</description>
+                        <config>
+                            <type>input</type>
+                        </config>
+                    </settings.formIdentifier>
+                    <settings.fieldMapping>
+                        <label>LLL:EXT:ot_formprefill/Resources/Private/Language/de.locallang_db.xlf:flexForms.fieldMapping.label</label>
+                        <description>LLL:EXT:ot_formprefill/Resources/Private/Language/de.locallang_db.xlf:flexForms.fieldMapping.description</description>
+                        <config>
+                            <type>text</type>
+                            <rows>6</rows>
+                        </config>
+                    </settings.fieldMapping>
+                </el>
+            </ROOT>
+        </sDEF>
+    </sheets>
+</T3DataStructure>

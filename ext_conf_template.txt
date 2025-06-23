@@ -1,0 +1,2 @@
+# cat=basic/enable; type=string; label=Allowed FE User fields
+allowedFields = username,name,title,first_name,middle_name,last_name,company,address,zip,city,country,telephone,fax,email,www

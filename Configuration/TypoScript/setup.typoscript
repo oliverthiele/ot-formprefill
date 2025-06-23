@@ -1,0 +1,7 @@
+tt_content.formprefill = FLUIDTEMPLATE
+tt_content.formprefill {
+  templateName = FormPrefill
+  templateRootPaths {
+    0 = EXT:ot_formprefill/Resources/Private/Templates/
+  }
+}

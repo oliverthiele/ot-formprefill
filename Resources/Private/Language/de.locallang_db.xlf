@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file source-language="en" target-language="de"
+		  datatype="plaintext" date="2025-06-23T11:55:17Z"
+		  original="EXT:ot_formprefill/Resources/Private/Language/locallang_db.xlf" product-name="ot-formprefill">
+		<header/>
+		<body>
+			<trans-unit id="CType" resname="CType" approved="yes">
+				<source>Form Prefill</source>
+				<target>Formular Prefill</target>
+			</trans-unit>
+			<trans-unit id="CType.description" resname="CType.description" approved="yes">
+				<source>Enables automatic pre-filling for logged-in front-end users.</source>
+				<target>Ermöglicht eine automatische Vorausfüllung für angemeldete Frontend-Benutzer.</target>
+			</trans-unit>
+			<trans-unit id="set.label" resname="set.label" approved="yes">
+				<source>Form Prefill</source>
+				<target>Formular Prefill</target>
+			</trans-unit>
+			<trans-unit id="flexForms.sheetTitle" resname="flexForms.sheetTitle" approved="yes">
+				<source>Prefill Settings</source>
+				<target>Prefill-Einstellungen</target>
+			</trans-unit>
+			<trans-unit id="flexForms.formIdentifier.label" resname="flexForms.formIdentifier.label" approved="yes">
+				<source>Form Identifier</source>
+				<target>Formular-Identifikator</target>
+			</trans-unit>
+			<trans-unit id="flexForms.formIdentifier.description" resname="flexForms.formIdentifier.description" approved="yes">
+				<source><![CDATA[Optional, if there is only one form on the page. Format: `<FormIdentifier>-<uid>` e.g. `contactform-12345`]]></source>
+				<target><![CDATA[Optional, wenn es nur ein Formular auf der Seite gibt. Format: `<Formularbezeichner>-<uid>` z.B. `kontaktformular-12345`]]></target>
+			</trans-unit>
+			<trans-unit id="flexForms.fieldMapping.label" resname="flexForms.fieldMapping.label" approved="yes">
+				<source>Field Mapping</source>
+				<target>Feld Mapping</target>
+			</trans-unit>
+			<trans-unit id="flexForms.fieldMapping.description" resname="flexForms.fieldMapping.description" approved="yes">
+				<source>One mapping per line, db_field:form-identifier, e.g. "company: text-2"</source>
+				<target>Ein Mapping pro Zeile, db_field:form-identifier, z. B. "company: text-2"</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

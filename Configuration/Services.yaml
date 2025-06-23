@@ -1,0 +1,17 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  OliverThiele\OtFormprefill\:
+    resource: '../Classes/*'
+
+  OliverThiele\OtFormprefill\ViewHelpers\FormPrefillViewHelper:
+    public: true
+    arguments:
+      $flexFormService: '@TYPO3\CMS\Core\Service\FlexFormService'
+      $resourceFactory: '@TYPO3\CMS\Core\Resource\ResourceFactory'
+
+  OliverThiele\OtFormprefill\Middleware\FrontendUserDataMiddleware:
+    autowire: true
