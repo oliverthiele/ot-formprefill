@@ -1,0 +1,44 @@
+{
+	"name": "oliverthiele/ot-formprefill",
+	"type": "typo3-cms-extension",
+	"description": "TYPO3 extension that automatically fills in form fields for logged-in frontend users using values from fe_users. Includes optional FlexForm-based field mapping and works with existing forms.",
+	"keywords": [
+		"typo3",
+		"form",
+		"frontend user",
+		"prefill",
+		"fe_users",
+		"formframework"
+	],
+	"homepage": "https://oliver-thiele.de",
+	"license": [
+		"GPL-2.0-or-later"
+	],
+	"version": "1.0.0",
+	"authors": [
+		{
+			"name": "Oliver Thiele",
+			"email": "mail@oliver-thiele.de",
+			"role": "Developer"
+		}
+	],
+	"require": {
+		"ext-pdo": "*",
+		"typo3/cms-core": "^13.4.14"
+	},
+	"require-dev": {
+		"roave/security-advisories": "dev-latest"
+	},
+	"conflict": {
+	},
+	"autoload": {
+		"psr-4": {
+			"OliverThiele\\OtFormprefill\\": "Classes/"
+		}
+	},
+	"extra": {
+		"typo3/cms": {
+			"extension-key": "ot_formprefill"
+		}
+	}
+}
