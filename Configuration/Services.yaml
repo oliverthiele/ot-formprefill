@@ -12,6 +12,7 @@ services:
     arguments:
       $flexFormService: '@TYPO3\CMS\Core\Service\FlexFormService'
       $resourceFactory: '@TYPO3\CMS\Core\Resource\ResourceFactory'
+      $siteFinder: '@TYPO3\CMS\Core\Site\SiteFinder'
 
   OliverThiele\OtFormprefill\Middleware\FrontendUserDataMiddleware:
     autowire: true

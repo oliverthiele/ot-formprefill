@@ -11,7 +11,9 @@ Field mapping is fully configurable via FlexForm or `config.yaml` – no TypoScr
 
 - Prefills input and textarea fields on the client side via JavaScript.
 - Secure PSR‑15 middleware that exposes **only whitelisted `fe_users` fields** as JSON (`/prefill-user.json`).
-- Flexible one‑to‑one mapping between `fe_users` columns and form field keys (configured per content element).
+- Flexible one‑to‑one mapping between `fe_users` columns and form field keys
+- Generic or UID-specific mapping definitions via `config.yaml`.
+ UID-specific mapping can also be defined per content element (via FlexForm).
 - Multiple forms per page supported.
 - Implemented as a dedicated **`CType`** (`formprefill`) – ready for TYPO3 v14 (no `list_type`).
 - Zero database changes and no modifications to existing forms.
@@ -48,11 +50,22 @@ otFormprefill:
     - name
     - email
     - company
+    - telephone
   formMappings:
-    contactForm-42:
-      email: email
-      fullName: name
+    contactForm:
+      name: text-1
+      company: text-2
+      email: email-1
+    contactForm-19022:
+      name: text-1
+      company: text-3     # Overrides generic mapping
+      telephone: text-4   # Adds extra field only for this form UID
 ```
+
+Mappings without UID act as default (by `persistenceIdentifier`).
+Mappings with UID (e.g. `kontaktformular-19022`) override or extend the generic mapping.
+
+---
 
 ### Extension Configuration (`ext_conf_template.txt`)
 
@@ -61,7 +74,7 @@ otFormprefill:
 allowedFields = username,name,title,first_name,middle_name,last_name,company,address,zip,city,country,telephone,fax,email,www
 ```
 
-Fields defined here are used as a fallback when no SiteConfig is present.
+Used only if no `config.yaml` is present. These fields are also hard-limited in the middleware.
 
 ---
 
@@ -73,7 +86,7 @@ A full TypoScript setup is provided.
 
 If you manage TypoScript manually (e.g. in your sitepackage), include it like this:
 
-```typo3_typoscript
+```typoscript
 @import 'EXT:ot_formprefill/Configuration/TypoScript/setup.typoscript'
 ```
 
@@ -88,24 +101,26 @@ dependencies:
   - oliverthiele/ot-formprefill
 ```
 
+This automatically includes the setup file and assets.
+
 ---
 
 ## Usage
 
 ### 1. Add the content element
 
-Insert this content element on the same page as the form element
+Insert the `Form Prefill` content element (CType: `formprefill`) on the same page as your form.
 
-### 2. Configure the FlexForm
+### 2. Configure the FlexForm (optional)
 
    | Field               | Description                                                                                      |
    |---------------------|--------------------------------------------------------------------------------------------------|
    | **Form Identifier** | Optional. Unique prefix for the form, e.g. `contactForm-42`. Required when multiple forms exist. |
    | **Mapping**         | One mapping per line: `fe_usersField:formFieldKey`, e.g.`company:firma``email:email`             |
 
-If no mapping is configured, automatic mapping is used: `fe_users.column` → identical form field name.
+If no mapping is configured, automatic mapping is used: `fe_users.column` → same form field name.
 
-### 3. Result
+### 3. Output
 
 After rendering, the ViewHelper will inject the mapping into the page as JavaScript:
 
@@ -124,7 +139,7 @@ window.formPrefillMappings = {
 
 ## Middleware: `/prefill-user.json`
 
-When a frontend user is logged in, the middleware returns a JSON payload of allowed fields:
+If a frontend user is logged in, this endpoint returns a filtered list of their fields:
 
 ```json
 {
@@ -133,21 +148,21 @@ When a frontend user is logged in, the middleware returns a JSON payload of allo
 }
 ```
 
-The allowed fields are taken from (in order):
+The list is determined (in order):
 
 1. `site/config.yaml` → `otFormprefill.allowedFields`
-2. Extension settings (`ext_conf_template.txt`)
-3. Fallback default list
+2. Extension setting (`ext_conf_template.txt`)
+3. Fallback default
 
 ---
 
 ## Developer Notes
 
 - JavaScript is located in `Resources/Public/JavaScript/FormPrefill.js`, embedded via `<f:asset.script defer="true">`
-- Middleware route defined in `Configuration/RequestMiddlewares.php`
-- CType registered in `TCA/Overrides/tt_content.php`
-- Icon registration: `Configuration/Icons.php`
-- Form detection logic in ViewHelper resolves `persistenceIdentifier` + content element UID as fallback identifier
+- Middleware route: `Configuration/RequestMiddlewares.php`
+- CType registration: `TCA/Overrides/tt_content.php`
+- Icon: `Configuration/Icons.php`
+- Mapping logic combines `persistenceIdentifier` and content element UID
 
 ---
 
@@ -160,6 +175,14 @@ The allowed fields are taken from (in order):
 ## License
 
 GPL‑2.0‑or‑later – see `LICENSE`
+
+---
+
+## Sponsor
+
+Initial development was sponsored by
+**[WWE Media GmbH](https://www.wwe-media.de/)**
+*Agency for digital products*
 
 ---
 
