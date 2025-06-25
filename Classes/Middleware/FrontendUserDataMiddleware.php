@@ -13,6 +13,12 @@ use TYPO3\CMS\Core\Http\JsonResponse;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 
+/**
+ * Middleware that handles requests for pre-filling user data in a frontend environment.
+ * It ensures that requests targeting a specific endpoint (`/prefill-user.json`) are
+ * authenticated and returns user-specific data based on the site's configuration or a
+ * default list of allowed fields.
+ */
 class FrontendUserDataMiddleware implements MiddlewareInterface
 {
     public function __construct(

@@ -25,6 +25,8 @@ namespace OliverThiele\OtFormprefill\ViewHelpers;
 use Doctrine\DBAL\ParameterType;
 use Symfony\Component\Yaml\Yaml;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Resource\Exception\InvalidFileException;
+use TYPO3\CMS\Core\Resource\Exception\InvalidPathException;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Service\FlexFormService;
 use TYPO3\CMS\Core\Site\Entity\Site;
@@ -103,7 +105,6 @@ class FormPrefillViewHelper extends AbstractViewHelper
         }
 
         $forms = $this->findFormsOnPage($pageUid, $languageUid);
-
         if (empty($forms)) {
             return self::ERROR_NO_FORM;
         }
@@ -136,19 +137,44 @@ class FormPrefillViewHelper extends AbstractViewHelper
         string $formIdentifier,
         ?Site $site
     ): array {
+        // Start with default mappings
+        $defaultMapping = [
+            'title' => 'title',
+            'firstName' => 'first_name',
+            'lastName' => 'last_name',
+            'name' => 'name',
+            'company' => 'company',
+            'address' => 'address',
+            'zip' => 'zip',
+            'city' => 'city',
+            'country' => 'country',
+            'email' => 'email',
+        ];
+
+        // Get custom mappings from FlexForm
         $customMapping = $this->parseFlexFormMapping($flexFormMapping);
 
+        // Merge with site configuration if available
         if ($site !== null) {
             $siteConfig = $site->getConfiguration();
 
-            // Check whether formMappings exist for the current form
+            // Extract the base identifier without UID
+            $baseIdentifier = preg_replace('/-\d+$/', '', $formIdentifier);
+
+            // Start with generic mappings for the form type (without UID)
+            if (!empty($siteConfig['otFormprefill']['formMappings'][$baseIdentifier])) {
+                $genericMapping = $siteConfig['otFormprefill']['formMappings'][$baseIdentifier];
+                $customMapping = array_merge($customMapping, $genericMapping);
+            }
+
+            // Then apply specific overrides if they exist (with UID)
             if (!empty($siteConfig['otFormprefill']['formMappings'][$formIdentifier])) {
-                // Site-Config mappings have priority over FlexForm mappings
-                $siteMapping = $siteConfig['otFormprefill']['formMappings'][$formIdentifier];
-                $customMapping = array_merge($customMapping, $siteMapping);
+                $specificMapping = $siteConfig['otFormprefill']['formMappings'][$formIdentifier];
+                $customMapping = array_merge($customMapping, $specificMapping);
             }
         }
-        return $customMapping;
+        // Custom mappings override default mappings
+        return array_merge($defaultMapping, $customMapping);
     }
 
     /**
@@ -226,17 +252,22 @@ class FormPrefillViewHelper extends AbstractViewHelper
             $formSettings = $this->getFlexFormSettings($formData['pi_flexform']);
             $persistenceIdentifier = $formSettings['persistenceIdentifier'] ?? '';
 
-            [$storageUid, $fileIdentifier] = explode(':', $persistenceIdentifier, 2);
-            $storage = $this->resourceFactory->getStorageObject((int)$storageUid);
-
-            if (!$storage->hasFile($fileIdentifier)) {
-                return null;
+            if (str_starts_with($persistenceIdentifier, 'EXT:')) {
+                $absoluteFilePath = GeneralUtility::getFileAbsFileName($persistenceIdentifier);
+                if (!$absoluteFilePath || !file_exists($absoluteFilePath)) {
+                    return null;
+                }
+                $yaml = file_get_contents($absoluteFilePath);
+            } else {
+                try {
+                    $file = $this->resourceFactory->retrieveFileOrFolderObject($persistenceIdentifier);
+                    $yaml = $file->getContents();
+                } catch (InvalidPathException|InvalidFileException) {
+                    return null;
+                }
             }
 
-            $formDefinition = Yaml::parse(
-                $storage->getFile($fileIdentifier)->getContents()
-            );
-
+            $formDefinition = Yaml::parse($yaml);
             return !empty($formDefinition['identifier'])
                 ? $formDefinition['identifier'] . '-' . $formData['uid']
                 : null;
